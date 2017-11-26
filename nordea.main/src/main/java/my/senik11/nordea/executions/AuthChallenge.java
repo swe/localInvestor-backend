@@ -17,7 +17,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import static spark.Spark.halt;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 public class AuthChallenge extends Execution {
     private static final Logger log = LoggerFactory.getLogger(ProceedAuthExecution.class);

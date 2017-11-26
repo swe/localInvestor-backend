@@ -52,7 +52,7 @@ import static my.senik11.nordea.model.Account.Type.COMPANY;
 import static spark.Spark.*;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 public class Application extends GuiceServletContextListener implements SparkApplication {
 

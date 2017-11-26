@@ -12,7 +12,7 @@ import spark.Request;
 import spark.Response;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 public abstract class Execution {
 

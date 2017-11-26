@@ -1,7 +1,7 @@
 package my.senik11.nordea.model;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 public final class FbResponse {
 

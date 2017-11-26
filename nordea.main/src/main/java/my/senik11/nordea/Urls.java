@@ -1,7 +1,7 @@
 package my.senik11.nordea;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 public final class Urls {
     public static final String FB_AUTH_PATH = "https://www.facebook.com/v2.11/dialog/oauth?" +

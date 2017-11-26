@@ -27,7 +27,7 @@ import static java.util.Collections.singletonList;
 import static spark.Spark.halt;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 public class ProceedAuthExecution extends Execution {
 

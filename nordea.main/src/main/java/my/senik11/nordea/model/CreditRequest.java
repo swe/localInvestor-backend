@@ -8,15 +8,13 @@ import com.googlecode.objectify.annotation.Parent;
 import java.util.List;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 @Entity
 public class CreditRequest {
 
     @Id
     private Long id;
-
-    // fullfillments
 
     public List<CreditPayment> payments;
 

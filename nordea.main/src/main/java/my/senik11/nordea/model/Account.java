@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Index;
 import java.io.Serializable;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 @Entity
 public class Account implements Serializable {

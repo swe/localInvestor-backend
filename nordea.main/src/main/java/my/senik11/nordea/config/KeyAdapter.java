@@ -12,7 +12,7 @@ import com.googlecode.objectify.Key;
 import java.lang.reflect.Type;
 
 /**
- * @author Arseny Krasenkov {@literal <akrasenkov@at-consulting.ru>}
+ * @author Arseny Krasenkov
  */
 public class KeyAdapter implements JsonSerializer<Key>, JsonDeserializer<Key> {
     @Override
