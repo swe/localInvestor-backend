@@ -45,6 +45,6 @@ public class CreditRequest {
         if (id == null || companyKey == null) {
             return null;
         }
-        return Key.create(companyKey, CreditResponsePack.class, id);
+        return Key.create(companyKey, CreditRequest.class, id);
     }
 }

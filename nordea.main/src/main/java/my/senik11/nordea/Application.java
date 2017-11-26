@@ -1,10 +1,10 @@
 package my.senik11.nordea;
 
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
-import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.FieldNamingPolicy;
@@ -28,7 +28,6 @@ import my.senik11.nordea.model.CreditRequest;
 import my.senik11.nordea.model.FbUser;
 import my.senik11.nordea.executions.AuthChallenge;
 import my.senik11.nordea.executions.ProceedAuthExecution;
-import my.senik11.nordea.model.CreditResponsePack;
 import my.senik11.nordea.model.PendingCreditPayment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,29 +79,34 @@ public class Application extends GuiceServletContextListener implements SparkApp
         ObjectifyService.register(Company.class);
         ObjectifyService.register(CreditRequest.class);
         ObjectifyService.register(CreditFullfillment.class);
-        ObjectifyService.register(CreditResponsePack.class);
 
         get("/auth/success", (request, response) -> new ProceedAuthExecution(request, response, requestFactory).execute());
 
+        before("/*", (in, out) -> {
+            out.header("Access-Control-Allow-Origin", "*");
+            out.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            out.header("Access-Control-Allow-Credentials", "true");
+        });
         before("/api/*", (request, response) -> new AuthChallenge(request, response, requestFactory).execute());
 
         get("/api/responses", (request, response) -> {
             Key<?> accountKey = request.attribute("account-key");
-            Iterable<CreditResponsePack> creditResponses = ofy().load().type(CreditResponsePack.class).ancestor(accountKey).iterable();
-            Map<Long, List<CreditResponsePack>> groupedResponses = new HashMap<>();
-            for (CreditResponsePack creditResponsePack : creditResponses) {
-                Long createdAt = creditResponsePack.createdAt;
+            Iterable<CreditFullfillment> creditResponses = ofy().load().type(CreditFullfillment.class)
+                    .ancestor(accountKey).iterable();
+            Map<Long, List<CreditFullfillment>> groupedResponses = new HashMap<>();
+            for (CreditFullfillment creditResponse : creditResponses) {
+                Long createdAt = creditResponse.createdAt;
                 if (!groupedResponses.containsKey(createdAt)) {
-                    groupedResponses.put(createdAt, Collections.singletonList(creditResponsePack));
+                    groupedResponses.put(createdAt, Collections.singletonList(creditResponse));
                 } else {
-                    groupedResponses.get(createdAt).add(creditResponsePack);
+                    groupedResponses.get(createdAt).add(creditResponse);
                 }
             }
             return gson.toJson(creditResponses);
         });
         post("/api/responses", (request, response) -> {
             String raw = request.body();
-            List<CreditResponsePack> responses = gson.fromJson(raw, new TypeToken<List<CreditResponsePack>>() {}.getType());
+            List<CreditFullfillment> responses = gson.fromJson(raw, new TypeToken<List<CreditFullfillment>>() {}.getType());
 
             Account account = request.attribute(ATTR_ACCOUNT);
             long fullAmonut = responses.stream()
@@ -136,7 +140,14 @@ public class Application extends GuiceServletContextListener implements SparkApp
             paymentObject.add("debtor", debtorObject);
             paymentObject.add("creditor", creditorObject);
 
-            requestFactory.buildPostRequest(paymentInitUrl, new JsonHttpContent(new GsonFactory(), paymentObject));
+            HttpResponse paymentResponse = requestFactory.buildPostRequest(paymentInitUrl,
+                    new JsonHttpContent(new GsonFactory(), paymentObject))
+                    .execute();
+            if (paymentResponse.getStatusCode() == 201) {
+                ofy().save().entities(responses);
+            } else {
+                halt(400, "payment-failed");
+            }
 
             ofy().save().entities(responses);
             response.status(201);

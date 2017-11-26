@@ -49,8 +49,6 @@ public class AuthChallenge extends Execution {
         Map<String, String> failData = new HashMap<>();
         failData.put("message", message);
         failData.put("redirect", String.format(Urls.NORDEA_AUTH, Application.CLIENT_ID, Urls.AUTH_SUCCESS));
-        response.status(401);
-        response.body(gson.toJson(failData));
         halt(401, gson.toJson(failData));
     }
 

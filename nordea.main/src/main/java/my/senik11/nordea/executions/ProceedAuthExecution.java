@@ -5,10 +5,12 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import my.senik11.nordea.Application;
 import my.senik11.nordea.Urls;
 import my.senik11.nordea.model.Account;
-import my.senik11.nordea.model.obp.AssetsResponse;
 import my.senik11.nordea.model.obp.TokenExchangeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,9 +74,10 @@ public class ProceedAuthExecution extends Execution {
             HttpResponse assetsResponse = requestFactory.buildGetRequest(assetsUrl)
                     .setHeaders(requestHeaders)
                     .execute();
-            AssetsResponse assets = gson.fromJson(assetsResponse.parseAsString(), AssetsResponse.class);
-            AssetsResponse.Account firstAccount = assets.getAccounts().get(0);
-            bankAccountId = firstAccount.accountId;
+            JsonObject assetsObject = new JsonParser().parse(assetsResponse.parseAsString()).getAsJsonObject();
+            JsonArray accountsArray = assetsObject.getAsJsonObject("accounts").getAsJsonArray();
+            JsonObject firstAccount = accountsArray.get(0).getAsJsonObject();
+            bankAccountId = firstAccount.getAsJsonPrimitive("accountId").getAsString();
         } catch (IOException e) {
             e.printStackTrace();
         }

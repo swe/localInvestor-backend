@@ -18,7 +18,7 @@ public final class Urls {
     public static final String FB_PROFILE_PATH_TMPL = "https://graph.facebook.com/v2.11/%s";
 
     public static final String NORDEA_AUTH = "https://api.hackathon.developer.nordeaopenbanking.com/v1/" +
-            "authentication?state=0&client_id=%s&redirect_uri=%s&X-Response-Scenarios=AuthenticationSkipUI";
+            "authentication?state=0&client_id=%s&redirect_uri=%s&X-Response-Scenarios=AuthenticationWithUI";
     public static final String NORDEA_TOKEN_EXCHANGE_TMPL = "https://api.hackathon.developer.nordeaopenbanking.com/v1/" +
             "authentication/access_token?code=%s&redirect_uri=%s";
     public static final String NORDEA_ACCOUNT_ASSETS = "https://api.hackathon.developer.nordeaopenbanking.com/v1/assets";
