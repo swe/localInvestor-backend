@@ -1,0 +1,3 @@
+rootProject.name = 'nordeaopbtest'
+include 'nordea.main'
+
